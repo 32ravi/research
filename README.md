@@ -5,7 +5,7 @@ Each class is self-contained and most have their own `main` method.
 
 ## Layout
 
-All sources live under `src/main/java`:
+Example sources live under `src/main/java`:
 
 | Package | Topic |
 | --- | --- |
@@ -20,14 +20,15 @@ All sources live under `src/main/java`:
 | `InnerClasses` | Inner, nested, and anonymous classes |
 | `miscLang` | Miscellaneous language features |
 | `performance` | Performance experiments |
-| `disruptor` | LMAX Disruptor example |
+| `disruptor` | Placeholder (empty `Test` class) |
 | `nativeCode`, `HelloJNI.java` | JNI examples |
 | `rjunitPowerMock` | JUnit / PowerMock examples |
 
-## Building
+JUnit, Mockito, and PowerMock tests live under `src/test/java` (`rjunit`, `rjunitPowerMock`).
 
-```sh
-mvn compile
-```
+## Running
 
-Run an individual example from your IDE, or with `java -cp target/classes <package>.<ClassName>`.
+The project was built in Eclipse (`.project`, `.classpath`), and `pom.xml` doesn't declare any
+dependencies or a Java version yet. Because of that, `mvn compile` won't work as-is: some classes
+need JUnit, Mockito, or PowerMock on the classpath. Import the project into an IDE, add those
+libraries, and run individual classes through their `main` methods.
