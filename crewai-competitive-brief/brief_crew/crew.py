@@ -32,13 +32,39 @@ def _require(name: str) -> str:
     return value
 
 
-llm = LLM(
-    model=_require("HARNESS_INFERENCE_MODEL"),
-    base_url=_require("HARNESS_INFERENCE_BASE_URL"),
-    api_key=_require("HARNESS_INFERENCE_API_KEY"),
-    provider="openai",
-    temperature=0.2,
-)
+def _build_llm() -> LLM:
+    """Prefer OPENAI_* (BYOK). Managed Agents rewrites HARNESS_INFERENCE_BASE_URL
+    to the VPC trusted endpoint, which rejects OpenAI sk-proj keys — so BYOK
+    must dial api.openai.com via OPENAI_BASE_URL, not HARNESS_INFERENCE_*.
+    """
+    openai_key = os.environ.get("OPENAI_API_KEY", "").strip()
+    if openai_key:
+        model = (
+            os.environ.get("OPENAI_MODEL", "").strip()
+            or os.environ.get("HARNESS_INFERENCE_MODEL", "").strip()
+            or "gpt-4o-mini"
+        )
+        base_url = (
+            os.environ.get("OPENAI_BASE_URL", "").strip()
+            or "https://api.openai.com/v1"
+        )
+        return LLM(
+            model=model,
+            base_url=base_url,
+            api_key=openai_key,
+            provider="openai",
+            temperature=0.2,
+        )
+    return LLM(
+        model=_require("HARNESS_INFERENCE_MODEL"),
+        base_url=_require("HARNESS_INFERENCE_BASE_URL"),
+        api_key=_require("HARNESS_INFERENCE_API_KEY"),
+        provider="openai",
+        temperature=0.2,
+    )
+
+
+llm = _build_llm()
 
 tools = action_gateway_tools()
 
