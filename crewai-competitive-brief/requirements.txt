@@ -1,0 +1,7 @@
+# Installed by the platform at session boot (pip install -r requirements.txt).
+# The crewai image pins crewai==1.15.11; keep this pin in step so pip doesn't
+# replace the version the platform's mediator runs against.
+crewai==1.15.11
+
+# Action Gateway tools (brief_crew/tools.py). Must match the crewai pin.
+crewai-tools[mcp]==1.15.11
